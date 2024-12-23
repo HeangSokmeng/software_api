@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AuthorsController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\DocumentsController;
+use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\GenresController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ServiceController;
@@ -16,13 +17,13 @@ use Illuminate\Support\Facades\Route;
  * Public Routes (No authentication required)
  */
 
- Route::group(['prefix' => 'author'], function () {
-    Route::post('/', [AuthorsController::class, 'saveAuthors'])->name('admin.author.save');
-    Route::get('/', [AuthorsController::class, 'getListAuthors'])->name('admin.author.list');
-    Route::get('/{id}', [AuthorsController::class, 'getOneAuthor'])->name('admin.author.one');
-    Route::put('/{id}', [AuthorsController::class, 'updateAuthor'])->name('admin.author.update');
-    Route::delete('/{id}', [AuthorsController::class, 'deleteAuthor'])->name('admin.author.delete');
-});
+//  Route::group(['prefix' => 'author'], function () {
+//     Route::post('/', [AuthorsController::class, 'saveAuthors'])->name('admin.author.save');
+//     Route::get('/', [AuthorsController::class, 'getListAuthors'])->name('admin.author.list');
+//     Route::get('/{id}', [AuthorsController::class, 'getOneAuthor'])->name('admin.author.one');
+//     Route::put('/{id}', [AuthorsController::class, 'updateAuthor'])->name('admin.author.update');
+//     Route::delete('/{id}', [AuthorsController::class, 'deleteAuthor'])->name('admin.author.delete');
+// });
 Route::group(['prefix' => 'auth'], function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/register', [AuthController::class, 'register'])->name('register'); // Consider making this general
@@ -33,6 +34,13 @@ Route::group(['prefix' => 'auth'], function () {
  * These routes require authentication
  */
 Route::middleware([CheckAuth::class, CheckUserRole::class])->group(function () {
+    Route::group(['prefix' => 'author'], function () {
+        Route::post('/', [AuthorsController::class, 'saveAuthors'])->name('admin.author.save');
+        Route::get('/', [AuthorsController::class, 'getListAuthors'])->name('admin.author.list');
+        Route::get('/{id}', [AuthorsController::class, 'getOneAuthor'])->name('admin.author.one');
+        Route::put('/{id}', [AuthorsController::class, 'updateAuthor'])->name('admin.author.update');
+        Route::delete('/{id}', [AuthorsController::class, 'deleteAuthor'])->name('admin.author.delete');
+    });
     // Superadmin routes
     Route::group(['prefix' => 'superadmin'], function () {
         Route::post('/register', [AuthController::class, 'register'])->name('superadmin.register'); // Optional, if different
@@ -91,19 +99,22 @@ Route::middleware([CheckAuth::class, CheckUserRole::class])->group(function () {
             Route::put('/{id}', [DocumentsController::class, 'updateDocument'])->name('admin.document.update');
             Route::delete('/{id}', [DocumentsController::class, 'deleteDocument'])->name('admin.document.delete');
         });
+        Route::group(['prefix' => 'setting/option'], function () {
+            Route::get('/role', [GeneralSettingController::class, 'getOptionRole'])->name('admin.option.role');
+        });
     });
 
     // Admin routes
     Route::group(['prefix' => 'admin'], function () {
         // Admin-specific routes could go here, if different than Superadmin
         Route::post('/register', [AuthController::class, 'register'])->name('admin.register');
-        Route::group(['prefix' => 'author'], function () {
-            Route::post('/', [AuthorsController::class, 'saveAuthors'])->name('admin.author.save');
-            Route::get('/', [AuthorsController::class, 'getListAuthors'])->name('admin.author.list');
-            Route::get('/{id}', [AuthorsController::class, 'getOneAuthor'])->name('admin.author.one');
-            Route::put('/{id}', [AuthorsController::class, 'updateAuthor'])->name('admin.author.update');
-            Route::delete('/{id}', [AuthorsController::class, 'deleteAuthor'])->name('admin.author.delete');
-        });
+        // Route::group(['prefix' => 'author'], function () {
+        //     Route::post('/', [AuthorsController::class, 'saveAuthors'])->name('admin.author.save');
+        //     Route::get('/', [AuthorsController::class, 'getListAuthors'])->name('admin.author.list');
+        //     Route::get('/{id}', [AuthorsController::class, 'getOneAuthor'])->name('admin.author.one');
+        //     Route::put('/{id}', [AuthorsController::class, 'updateAuthor'])->name('admin.author.update');
+        //     Route::delete('/{id}', [AuthorsController::class, 'deleteAuthor'])->name('admin.author.delete');
+        // });
         Route::group(['prefix' => 'category'], function () {
             Route::post('/', [CategoriesController::class, 'saveCategory'])->name('admin.category.save');
             Route::get('/', [CategoriesController::class, 'getListCategories'])->name('admin.category.list');

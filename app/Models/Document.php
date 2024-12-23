@@ -35,7 +35,8 @@ class Document extends Model
         'doc_photo',
         'author_id',
         'category_id',
-        'genre_id',
+        'doc_file',
+        // 'genre_id',
         'doc_type',
         'create_uid',
         'update_uid',
@@ -57,7 +58,6 @@ class Document extends Model
         'date' => 'datetime:d-M-Y',
         'doc_created_date' => 'datetime:d-M-Y',
         'doc_published_date' => 'datetime:d-M-Y',
-        'doc_publication_year' => 'datetime:d-M-Y',
     ];
 
     // Define relationships
@@ -71,10 +71,10 @@ class Document extends Model
         return $this->belongsTo(Category::class, 'category_id', 'cate_id');
     }
 
-    public function genre()
-    {
-        return $this->belongsTo(Genre::class, 'genre_id', 'genr_id');
-    }
+    // public function genre()
+    // {
+    //     return $this->belongsTo(Genre::class, 'genre_id', 'genr_id');
+    // }
 
     public function creator()
     {
