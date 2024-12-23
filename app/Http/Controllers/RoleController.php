@@ -43,11 +43,10 @@ class RoleController extends Controller
             })
             ->orderBy('id', 'desc');
         $roles = $rolesQuery->get();
-        $roles->getCollection()->transform(function ($role) {
+        foreach ($roles as $role) {
             $role->create_by_username = $role->creator->username ?? null;
-            unset($role->creator);
-            return $role;
-        });
+            unset($role->creator, $role->create_uid, $role->update_uid, $role->company_id, $role->branch_id);
+        }
         return ApiResponse::Pagination($roles, $req, "Success");
     }
 

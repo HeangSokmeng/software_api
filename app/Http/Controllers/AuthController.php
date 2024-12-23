@@ -98,22 +98,25 @@ class AuthController extends Controller
     {
         $validator = Validator::make($req->all(), [
             'username' => 'required|string',
-            'password' => 'required|string|min:4',
+            'password' => 'required|string'
         ]);
         if ($validator->fails()) {
             return response()->json([
-                'errors' => $validator->errors(),
+                'errors' => $validator->errors()
             ], 422);
         }
+
         $credentials = $req->only('username', 'password');
+        // Set the token TTL dynamically (e.g., 2 hours)
+        JWTAuth::factory()->setTTL(300);
         if (!$token = JWTAuth::attempt($credentials)) {
-            return ApiResponse::Unauthorized(
-                'Invalid credentials'
-            );
+            return ApiResponse::Unauthorized('Invalid credentials');
         }
+
         $user = Auth::user();
         return ApiResponse::JsonResult([
             'access_token' => $token,
+            'token_expires_in' => JWTAuth::factory()->getTTL() * 60, // Return expiration in seconds
             'account_type' => $user->account_type,
             'username' => $user->username,
         ]);
