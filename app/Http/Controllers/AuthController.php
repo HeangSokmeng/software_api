@@ -93,6 +93,18 @@ class AuthController extends Controller
             ->get();
         return ApiResponse::JsonResult($users, 'User list retrieved successfully.');
     }
+    public function getListTeacher()
+    {
+        $user = UserService::getAuthUser();
+        if (!$user) {
+            return ApiResponse::NotFound("User does not exist");
+        }
+        $users = User::with('roles')
+            ->where('id', '!=', $user->id)
+            ->where('account_type', 'teacher')
+            ->get();
+        return ApiResponse::JsonResult($users, 'User list retrieved successfully.');
+    }
 
     public function login(Request $req): JsonResponse
     {
@@ -153,4 +165,6 @@ class AuthController extends Controller
             'expires_in' => config('jwt.ttl'),
         ], 200);
     }
+
+
 }

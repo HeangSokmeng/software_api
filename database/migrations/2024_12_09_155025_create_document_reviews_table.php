@@ -12,12 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('document_reviews', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('document_id');
             // $table->unsignedBigInteger('user_id');
             $table->text('docr_comment');
             $table->integer('docr_rating')->nullable();
 
             $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 

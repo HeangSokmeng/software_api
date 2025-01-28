@@ -14,4 +14,15 @@ class GeneralSettingController extends Controller
         $user = UserService::getAuthUser();
         return ApiResponse::JsonResult(GeneralSettingService::optionRole($user));
     }
+
+    public function getOptionCategory()
+    {
+        $user = UserService::getAuthUser();
+        return ApiResponse::JsonResult(GeneralSettingService::optionCategory($user));
+    }
+    public function getOptionAuthor()
+    {
+        $user = UserService::getAuthUser();
+        return ApiResponse::JsonResult(GeneralSettingService::optionsAuthor($user));
+    }
 }

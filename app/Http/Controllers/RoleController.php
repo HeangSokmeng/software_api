@@ -6,6 +6,8 @@ use ApiResponse;
 use Illuminate\Http\Request;
 use App\Models\Role;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Log;
+
 class RoleController extends Controller
 {
     public function roleValidation(Request $req)
@@ -26,6 +28,10 @@ class RoleController extends Controller
         $input['update_uid'] = $user->user_id;
         $input['company_id'] = $user->company_id;
         $input['branch_id'] = $user->branch_id;
+        $existingRole = Role::where('name', $input['name'])->first();
+        if ($existingRole) {
+            return response()->json(['error' => 'Role name already exists.'], 400);
+        }
         $role = Role::create($input);
         if(!$role) return ApiResponse::Error('Fail to create');
         return ApiResponse::JsonResult($role, false, 'Created');
@@ -78,6 +84,7 @@ class RoleController extends Controller
     }
 
     public function deleteRole($id){
+        Log::info($id);
         $role = Role::find($id);
         if (!$role) return ApiResponse::NotFound('Role not found');
         $role->delete();

@@ -25,8 +25,8 @@ class RolesTable extends Migration
             $table->unsignedBigInteger('update_uid');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->unsignedBigInteger('company_id');
-            $table->foreign('branch_id')->references('id')->on('branches');
-            $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreign('branch_id')->references('id')->on('branches')->onDelete('cascade');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
         });
     }
 

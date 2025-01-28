@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use ApiResponse;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CategoriesController extends Controller
 {
@@ -51,6 +52,7 @@ class CategoriesController extends Controller
     }
 
     public function deleteCategory($id){
+        Log::info($id);
         $authors = Category::find($id);
         if (!$authors) return ApiResponse::NotFound('Category not found');
         $authors->delete();
