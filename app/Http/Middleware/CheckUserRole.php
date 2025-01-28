@@ -14,7 +14,7 @@ class CheckUserRole
         if (Auth::check()) {
             $user = Auth::user();
             $routeName = Route::currentRouteName();
-            if ($user->account_type === 'superadmin') {
+            if ($user->account_type === 'superadmin' || $user->account_type === 'admin' ) {
                 return $next($request);
             }
             $adminRoutes = ['admin.*'];
